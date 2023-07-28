@@ -1,5 +1,5 @@
 {
-    "family": "meteor0505",
+    "taskDefinitionArn": "arn:aws:ecs:us-east-2:802793033989:task-definition/meteor0505:1",
     "containerDefinitions": [
         {
             "name": "testr",
@@ -7,10 +7,10 @@
             "cpu": 0,
             "portMappings": [
                 {
-                    "name": "testr-80-tcp",
                     "containerPort": 80,
                     "hostPort": 80,
                     "protocol": "tcp",
+                    "name": "testr-80-tcp",
                     "appProtocol": "http"
                 }
             ],
@@ -32,15 +32,42 @@
             }
         }
     ],
+    "family": "meteor0505",
     "executionRoleArn": "arn:aws:iam::802793033989:role/ecsTaskExecutionRole",
     "networkMode": "bridge",
+    "revision": 1,
+    "volumes": [],
+    "status": "ACTIVE",
+    "requiresAttributes": [
+        {
+            "name": "com.amazonaws.ecs.capability.logging-driver.awslogs"
+        },
+        {
+            "name": "ecs.capability.execution-role-awslogs"
+        },
+        {
+            "name": "com.amazonaws.ecs.capability.docker-remote-api.1.19"
+        },
+        {
+            "name": "com.amazonaws.ecs.capability.docker-remote-api.1.18"
+        },
+        {
+            "name": "com.amazonaws.ecs.capability.docker-remote-api.1.29"
+        }
+    ],
+    "placementConstraints": [],
+    "compatibilities": [
+        "EC2"
+    ],
+    "runtimePlatform": {
+        "cpuArchitecture": "X86_64",
+        "operatingSystemFamily": "LINUX"
+    },
     "requiresCompatibilities": [
         "EC2"
     ],
     "cpu": "512",
     "memory": "512",
-    "runtimePlatform": {
-        "cpuArchitecture": "X86_64",
-        "operatingSystemFamily": "LINUX"
-    }
+    "registeredAt": "2023-07-28T05:17:06.921000+00:00",
+    "registeredBy": "arn:aws:iam::802793033989:root"
 }
