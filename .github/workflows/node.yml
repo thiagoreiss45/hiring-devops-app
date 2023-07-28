@@ -41,8 +41,8 @@ jobs:
         #   IMAGE_TAG: ${{ github.sha }}
         run: |
           docker build -t meteor-hiring-thiago-repo .
-          docker tag meteor-hiring-thiago-repo:1 public.ecr.aws/t8y4c8l7/meteor-hiring-thiago-repo:1
-          docker push ${{ secrets.AWS_ECR_REPOSITORY }}:1
+          docker tag meteor-hiring-thiago-repo:latest public.ecr.aws/t8y4c8l7/meteor-hiring-thiago-repo:latest
+          docker push ${{ secrets.AWS_ECR_REPOSITORY }}:latest
 
       - name: Fill in the new image ID in the Amazon ECS task definition
         id: task-def
