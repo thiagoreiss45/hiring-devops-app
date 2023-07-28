@@ -44,13 +44,9 @@ jobs:
           docker tag meteor-hiring-thiago-repo:latest public.ecr.aws/t8y4c8l7/meteor-hiring-thiago-repo:latest
           docker push ${{ secrets.AWS_ECR_REPOSITORY }}:latest
 
-      - name: Fill in the new image ID in the Amazon ECS task definition
-        id: task-def
-        uses: aws-actions/amazon-ecs-deploy-task-definition@v1
-        with:
-          task-definition: meteor0505
-          container-name: testr
-          image: ${{ steps.build-image.outputs.image }}
+      - name: Update ECS Service
+        run: |
+          ecs deploy ${{ secrets.AWS_ECS_CLUSTER }} ${{ secrets.AWS_ECS_SERVICE }} --image ${{ steps.build-image.outputs.image }}
       # - name: Build and Push Docker image to ECR
       #   run: |
       #     docker build -t $ECR_REPOSITORY:${{ github.sha }} .
