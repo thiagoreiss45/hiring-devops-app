@@ -3,8 +3,7 @@ name: Build, Push, and Deploy to ECR and ECS
 on:
   push:
     branches:
-      - main  # Change to your main branch name
-
+      - main  
 env:
   ECR_REPOSITORY: ${{ secrets.AWS_ECR_REPOSITORY }}
   ECS_CLUSTER: ${{ secrets.AWS_ECS_CLUSTER }}
@@ -34,16 +33,11 @@ jobs:
       
       - name: Build, tag, and push docker image to Amazon ECR Public
         id: build-image
-        # env:
-        #   REGISTRY: ${{ steps.login-ecr-public.outputs.registry }}
-        #   REGISTRY_ALIAS: my-ecr-public-registry-alias
-        #   REPOSITORY: meteor-hiring-thiago-repo
-        #   IMAGE_TAG: ${{ github.sha }}
         run: |
           docker build -t meteor-hiring-thiago-repo .
           docker tag meteor-hiring-thiago-repo:latest public.ecr.aws/t8y4c8l7/meteor-hiring-thiago-repo:latest
           docker push ${{ secrets.AWS_ECR_REPOSITORY }}:latest
-          echo "::set-output name=image::meteor-hiring-thiago-repo"
+          echo "::set-output name=image::${{ secrets.AWS_ECR_REPOSITORY }}:latest"
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
@@ -64,20 +58,10 @@ jobs:
           container-name: testr
           image: ${{ steps.build-image.outputs.image }}
       
-      - name: Deploy Amazon ECS task definition
-        uses: aws-actions/amazon-ecs-deploy-task-definition@v1
-        with:
-          task-definition: ${{ steps.task-def.outputs.task-definition }}
-          service: meteor-service-2
-          cluster: meteor-ecs-cluster
-          wait-for-service-stability: true
-      # - name: Build and Push Docker image to ECR
-      #   run: |
-      #     docker build -t $ECR_REPOSITORY:${{ github.sha }} .
-      #     docker tag $ECR_REPOSITORY:${{ github.sha }} $ECR_REPOSITORY:latest
-      #     docker push $ECR_REPOSITORY:${{ github.sha }}
-      #     docker push $ECR_REPOSITORY:latest
-
-      # - name: Update ECS Service
-      #   run: |
-      #     ecs deploy $ECS_CLUSTER $ECS_SERVICE --image $ECR_REPOSITORY:${{ github.sha }}
+      # - name: Deploy Amazon ECS task definition
+      #   uses: aws-actions/amazon-ecs-deploy-task-definition@v1
+      #   with:
+      #     task-definition: ${{ steps.task-def.outputs.task-definition }}
+      #     service: meteor-service-2
+      #     cluster: meteor-ecs-cluster
+      #     wait-for-service-stability: true
