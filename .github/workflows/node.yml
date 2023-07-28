@@ -44,9 +44,9 @@ jobs:
           docker tag meteor-hiring-thiago-repo:latest public.ecr.aws/t8y4c8l7/meteor-hiring-thiago-repo:latest
           docker push ${{ secrets.AWS_ECR_REPOSITORY }}:latest
 
-      # - name: Download task definition
-      #   run: |
-      #     aws ecs describe-task-definition --task-definition meteor0505 --query taskDefinition > task-definition.json
+      - name: Download task definition
+        run: |
+          aws ecs describe-task-definition --task-definition meteor0505 --query taskDefinition > task-definition.json
 
       - name: Fill in the new image ID in the Amazon ECS task definition
         id: task-def
