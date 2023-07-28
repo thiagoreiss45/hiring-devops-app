@@ -33,6 +33,7 @@ jobs:
           registry-type: public
       
       - name: Build, tag, and push docker image to Amazon ECR Public
+        id: build-image
         # env:
         #   REGISTRY: ${{ steps.login-ecr-public.outputs.registry }}
         #   REGISTRY_ALIAS: my-ecr-public-registry-alias
@@ -40,8 +41,16 @@ jobs:
         #   IMAGE_TAG: ${{ github.sha }}
         run: |
           docker build -t meteor-hiring-thiago-repo .
-          docker tag meteor-hiring-thiago-repo:latest public.ecr.aws/t8y4c8l7/meteor-hiring-thiago-repo:latest
-          docker push ${{ secrets.AWS_ECR_REPOSITORY }}:latest
+          docker tag meteor-hiring-thiago-repo:1 public.ecr.aws/t8y4c8l7/meteor-hiring-thiago-repo:1
+          docker push ${{ secrets.AWS_ECR_REPOSITORY }}:1
+
+      - name: Fill in the new image ID in the Amazon ECS task definition
+        id: task-def
+        uses: aws-actions/amazon-ecs-deploy-task-definition@v1
+        with:
+          task-definition: meteor0505
+          container-name: testr
+          image: ${{ steps.build-image.outputs.image }}
       # - name: Build and Push Docker image to ECR
       #   run: |
       #     docker build -t $ECR_REPOSITORY:${{ github.sha }} .
