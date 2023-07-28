@@ -27,17 +27,27 @@ jobs:
           aws-region: ${{ secrets.AWS_REGION }}
 
       - name: Login to Amazon ECR
-        id: login-ecr
+        id: login-ecr-public
+        uses: aws-actions/amazon-ecr-login@v1
+        with:
+          registry-type: public
+      
+      - name: Build, tag, and push docker image to Amazon ECR Public
+        # env:
+        #   REGISTRY: ${{ steps.login-ecr-public.outputs.registry }}
+        #   REGISTRY_ALIAS: my-ecr-public-registry-alias
+        #   REPOSITORY: meteor-hiring-thiago-repo
+        #   IMAGE_TAG: ${{ github.sha }}
         run: |
-          aws ecr get-login-password --region ${{ secrets.AWS_REGION }} | docker login --username AWS --password-stdin $ECR_REPOSITORY
+          docker build -t meteor-hiring-thiago-repo .
+          docker push ${{ secrets.AWS_ECR_REPOSITORY }}:latest
+      # - name: Build and Push Docker image to ECR
+      #   run: |
+      #     docker build -t $ECR_REPOSITORY:${{ github.sha }} .
+      #     docker tag $ECR_REPOSITORY:${{ github.sha }} $ECR_REPOSITORY:latest
+      #     docker push $ECR_REPOSITORY:${{ github.sha }}
+      #     docker push $ECR_REPOSITORY:latest
 
-      - name: Build and Push Docker image to ECR
-        run: |
-          docker build -t $ECR_REPOSITORY:${{ github.sha }} .
-          docker tag $ECR_REPOSITORY:${{ github.sha }} $ECR_REPOSITORY:latest
-          docker push $ECR_REPOSITORY:${{ github.sha }}
-          docker push $ECR_REPOSITORY:latest
-
-      - name: Update ECS Service
-        run: |
-          ecs deploy $ECS_CLUSTER $ECS_SERVICE --image $ECR_REPOSITORY:${{ github.sha }}
+      # - name: Update ECS Service
+      #   run: |
+      #     ecs deploy $ECS_CLUSTER $ECS_SERVICE --image $ECR_REPOSITORY:${{ github.sha }}
