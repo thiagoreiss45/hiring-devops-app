@@ -35,7 +35,7 @@ module.exports = {
                 var val = result[i];
                 values[val["_id"]] = val["value"]
             }
-            var title = process.env.TITLE || 'teste1'
+            var title = process.env.TITLE || 'teste2'
             res.render('index', {title, values: values});
         });
     },
