@@ -35,7 +35,7 @@ module.exports = {
                 var val = result[i];
                 values[val["_id"]] = val["value"]
             }
-            var title = process.env.TITLE || 'Meteor DevOps Hiring'
+            var title = process.env.TITLE || 'teste1'
             res.render('index', {title, values: values});
         });
     },
